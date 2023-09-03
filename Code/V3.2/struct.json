@@ -1,0 +1,102 @@
+{
+    "installer": "🛠 Installers",
+    "font": "🔠 Fonts",
+    "documents": [
+        {
+            "sp": "📄 Documents/",
+            "writer": "Writer",
+            "calc": "Calc",
+            "impress": "Impress",
+            "google": [
+                {
+                    "sp": "Google/",
+                    "g_doc": "Doc",
+                    "g_sheet": "calc",
+                    "g_slides": "Slides",
+                    "g_map": "Map"
+                }
+            ],
+            "code": [
+                {
+                    "sp": "Code/",
+                    "js": "JS",
+                    "htmlcss": "HTML-CSS",
+                    "python": "Python",
+                    "android": "Android",
+                    "xml": "XML",
+                    "php": "PHP",
+                    "log": "Logs",
+                    "java":"Java"
+                }
+            ]
+        }
+    ],
+    "images": [
+        {
+            "sp": "🖼 Images/",
+            "saves": "Saves",
+            "vector": "Vector",
+            "photos": "Photos",
+            "web": "Web",
+            "icon": "Icon"
+        }
+    ],
+    "music": [
+        {
+            "sp": "🔊 Audio/",
+            "recordings": "Recordings"
+        }
+    ],
+    "videos": [
+        {
+            "sp": "🎬 Videos/",
+            "footages": "Footages",
+            "m3u": "M3U"
+        }
+    ],
+    "archives": [
+        {
+            "sp": "📚 Archives/",
+            "arch_images": "Images",
+            "archives": "Zip-rar",
+            "tacview": "Tacview"
+
+        }
+    ],
+    "skin": [
+        {
+            "sp": "👻 Skins/",
+            "rainmeter": "Rainmeter"
+        }
+    ],
+    "video-games": [
+        {
+            "sp": "🎮 Video-games/",
+            "DCSW": "DCS World"
+        }
+    ],
+    "3D": [
+        {
+            "sp": "3️⃣D󠁄/",
+            "soliworks": [
+                {
+                    "sp": "Soliworks/",
+                    "solass": "Assemblage",
+                    "solpi": "Pièce",
+                    "soldraw": "Dessin"
+                }
+            ],
+            "stl": "STL",
+            "3mf": "3MF",
+            "gcode": "gcode",
+            "zortrax": [
+                {
+                    "sp": "Zortrax/",
+                    "zc2": "RTP",
+                    "zc": "RTP",
+                    "zpx": "Project"
+                }
+            ]
+        }
+    ]
+}
