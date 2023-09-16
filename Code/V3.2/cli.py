@@ -3,8 +3,6 @@ import os
 import sys
 from lib import intialiser, organiser
 
-FOLDER_NAME = "↪ Organize Folder ↩"
-
 def build_name_of_directory(id_):
     return os.path.join("C:/Users",id_, "Downloads")
 
@@ -76,8 +74,8 @@ def main():
             print("------------")
 
     print()
-    intialiser(def_path, FOLDER_NAME)
-    organiser(def_path, FOLDER_NAME)
+    intialiser(def_path)
+    organiser(def_path)
     input("press 'enter' to finish")
 
 

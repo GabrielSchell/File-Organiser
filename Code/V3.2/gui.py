@@ -1,91 +1,76 @@
-import threading
+import sys, time, json, os.path
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QVBoxLayout, QProgressBar, QLabel
+from PyQt5.QtCore import QTimer, QStandardPaths, Qt
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from lib import intialiser, organiser, estimation
 
-from lib import of2
+class FolderSelectorApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Folder Selector')
+        self.setGeometry(100, 100, 400, 200)
+
+        # Create buttons
+        self.update_button = QPushButton('ORGANISE FOLDER', self)
+
+        # Create a progress bar and a label for "FINISHED!"
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.hide()  # Hide the progress bar initially
+        self.progress_label = QLabel(self)
+        self.progress_label.setAlignment(Qt.AlignCenter)
+        self.progress_label.hide()  # Hide the label initially
+
+        # Connect button signals to slots
+        self.update_button.clicked.connect(self.update_folder)
+
+        # Layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.update_button)
+        layout.addWidget(self.progress_bar)
+        layout.addWidget(self.progress_label)
+        self.setLayout(layout)
+
+        # Flag to track if the operation is finished
+        self.operation_finished = False
+
+        # Create a QTimer for showing "FINISHED!" after 1 second
+        self.finished_timer = QTimer(self)
+        self.finished_timer.timeout.connect(self.show_finished_label)
 
 
-class MainWindow(QtWidgets.QMainWindow):
-    started = QtCore.pyqtSignal()
-    finished = QtCore.pyqtSignal()
+    def update_folder(self):
+        folder_path = self.select_folder()
+        if folder_path:
+            print("Selected folder for UPDATE ORGANISED FOLDER:", folder_path)
+            max=2*int(estimation(folder_path))
+            self.progress_bar.setValue(0)
+            self.progress_label.hide()
+            self.progress_bar.show()         
+            count=intialiser(folder_path, self.progress_bar, max=max)
+            organiser(folder_path, self.progress_bar, count=count, max=max)
+            print("MAX: ",max)
+            self.finished_timer.start(1000)
 
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
-        self.setWindowTitle(self.tr("File-Organizer"))
-        font = QtGui.QFont()
-        font.setFamily("Panton Light Caps")
-        font.setPointSize(25)
+    def select_folder(self):
+        self.progress_label.hide()
+        options = QFileDialog.Options()
+        default_path = QStandardPaths.writableLocation(QStandardPaths.DownloadLocation)
+        folder_dialog = QFileDialog.getExistingDirectory(self, "Select Folder", default_path, options=options)
+        return folder_dialog.replace("\\", "/")
 
-        self.title = QtWidgets.QLabel(
-            self.tr("Welcome into File-Organizer !"), alignment=QtCore.Qt.AlignCenter
-        )
-        self.title.setFont(font)
-        self.title.setGeometry(QtCore.QRect(200, 0, 450, 60))
-
-        self.button = QtWidgets.QPushButton(self.tr("Select your folder"))
-        font = QtGui.QFont()
-        font.setFamily("Yu Gothic UI")
-        font.setPointSize(12)
-        self.button.setFont(font)
-        self.button.setFixedSize(160, 40)
-
-        #self.progressbar = QtWidgets.QProgressBar(alignment=QtCore.Qt.AlignCenter)
-        #self.progressbar.setFixedSize(300, 30)
-        #self.progressbar.setGeometry(50, 1500, 700, 20)
-        #self.progressbar.setGeometry(200, 0, 450, 60)
+    def show_finished_label(self):
+        # Update the label to show "FINISHED!" when the QTimer triggers
+        self.progress_bar.hide()
+        self.progress_label.setText("FINISHED!")
+        self.progress_label.show()
+        self.operation_finished = True
         
 
-        central_widget = QtWidgets.QWidget()
-        self.setCentralWidget(central_widget)
-
-        lay = QtWidgets.QVBoxLayout(central_widget)
-        lay.setContentsMargins(0, 10, 0, 0)
-        lay.setSpacing(60)
-        lay.addWidget(self.title, alignment=QtCore.Qt.AlignCenter)
-        lay.addWidget(self.button, alignment=QtCore.Qt.AlignCenter)
-        #lay.addWidget(self.progressbar, alignment=QtCore.Qt.AlignCenter)
-        #lay.addStretch()
-
-        self.resize(800, 200)
-
-        self.button.clicked.connect(self.onClicked)
-        #self.started.connect(self.onStarted)
-        #self.finished.connect(self.onFinished)
-
-
-    @QtCore.pyqtSlot()
-    def onClicked(self):
-        directory = QtWidgets.QFileDialog.getExistingDirectory(
-            self,
-            "Select Directory",
-            QtCore.QStandardPaths.writableLocation(
-                QtCore.QStandardPaths.DownloadLocation
-            ),
-        )
-        if directory:
-            threading.Thread(
-                target=self.of2, args=(directory,), daemon=True
-            ).start()
-    
-    def of2(self, directory):
-        #self.started.emit()
-        of2(directory)
-        #self.finished.emit()
-
-"""
-    @QtCore.pyqtSlot()
-    def onStarted(self):
-        self.progressbar.setRange(0, 0)
-
-    @QtCore.pyqtSlot()
-    def onFinished(self):
-        self.progressbar.setRange(1, 1)
-"""
-    
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    w = MainWindow()
-    w.show()
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = FolderSelectorApp()
+    window.show()
     sys.exit(app.exec_())
